@@ -1,0 +1,15 @@
+{
+    "file_path": {
+        "opt_path": "../../dataset/Model Parameters.xlsx",
+        "save_path": "../../results/GSA/40HSWF_FMG"
+    },
+    "rows": {
+        "start_row_opt": 14,
+        "end_row_opt": 18
+    },
+    "cols": {
+        "cols_opt": [14, 15, 16, 17, 18, 19]
+    },
+    "params_list": ["E_c1", "tau_c1", "alpha_1", "E_c2", "tau_c2", "alpha_2"],
+    "GnP_list": ["0.0GnP", "0.5GnP", "1.0GnP", "1.5GnP"]
+}
