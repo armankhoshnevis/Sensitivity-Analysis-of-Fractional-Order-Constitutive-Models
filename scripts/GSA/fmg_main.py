@@ -35,7 +35,7 @@ if __name__ == "__main__":
     lower_bound = 2 * mu - upper_bound
 
     # Unified frequency range
-    w_freq = np.logspace(-8, 2, 100)
+    w_freq = np.logspace(-8, 2, 500)
 
     # Calculate the model evaluations for storage, loss, and magnitude of complex moduli using the optimized parameters
     model_params = mu

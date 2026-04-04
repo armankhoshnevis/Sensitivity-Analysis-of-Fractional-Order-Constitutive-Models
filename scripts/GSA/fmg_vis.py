@@ -13,8 +13,7 @@ if __name__ == "__main__":
     parser.add_argument('--S', type=str, help='Sensitivity index type (S1 or ST)')
     parser.add_argument('--E', type=str, help='Modulus type (Ep, Epp, or Ecomplex)')
     parser.add_argument('--N', type=int, help='Number of samples (N = 2**m)')
-    parser.add_argument('--HS', type=int, default=20)
-    parser.add_argument('--GnP_idx', type=int, default=0, help='Index of GnP in GnP_list for which to perform sensitivity analysis. GnP_idx = 0, 1, 2, 3 -> 0%, 0.5%, 1%, and 1.5% GnP')
+    parser.add_argument('--HS', type=int, help='Value of Hard Segment Weight Fraction (e.g., 20, 30, or 40)')
     args = parser.parse_args()
     
     w_freq = np.logspace(-8, 2, 100)
@@ -63,6 +62,6 @@ if __name__ == "__main__":
     plot_Linf_grouped(
         Linf_Ep_mean,
         Linf_Ep_std,
-        ylabel=r"$||\bar{S}_{E^{\prime}}||_{L_{\infty}}$",
-        save_path="../../results/GSA/GSA_Linf_Ep"
+        ylabel=r"$||\bar{S}_{" + args.ylabel_input + r"}||_{L_{\infty}}$",
+        save_path="../../results/GSA/GSA_Linf_{" + args.ylabel_input + r"}_FMG"
     )
