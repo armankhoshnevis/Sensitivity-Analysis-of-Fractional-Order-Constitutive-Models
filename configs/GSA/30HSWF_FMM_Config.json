@@ -1,0 +1,15 @@
+{
+    "file_path": {
+        "opt_path": "../../dataset/Model Parameters.xlsx",
+        "save_path": "../../results/GSA/30HSWF_FMM"
+    },
+    "rows": {
+        "start_row_opt": 8,
+        "end_row_opt": 12
+    },
+    "cols": {
+        "cols_opt": [3, 4, 5, 6, 7, 8, 9]
+    },
+    "params_list": ["E_c1", "tau_c1", "alpha_1", "beta_1", "E_c2", "tau_c2", "alpha_2"],
+    "GnP_list": ["0.0GnP", "0.5GnP", "1.0GnP", "1.5GnP"]
+}
