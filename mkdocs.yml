@@ -49,3 +49,9 @@ extra_javascript:
 
 nav:
   - Home: index.md
+  - Dataset: dataset.md
+  - Constitutive Models: constitutive_models.md
+  - Sensitivity Analysis:
+      - Local Sensitivity Analysis: lsa.md
+      - Global Sensitivity Analysis: gsa.md
+  - Configs: configs.md
