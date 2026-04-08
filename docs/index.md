@@ -85,16 +85,16 @@ If you use this software, please cite it and its corresponding paper, as:
     year = {2026}<br>
     }
 
-- Paper citation:
-@article{khoshnevis2025stochastic,
-  title={Stochastic Generalized-Order Constitutive Modeling of Viscoelastic Spectra of Polyurea-Graphene Nanocomposites},
-  author={Khoshnevis, Arman and Tzelepis, Demetrios A and Ginzburg, Valeriy V and Zayernouri, Mohsen},
-  journal={Engineering Reports},
-  volume={7},
-  number={9},
-  pages={e70367},
-  year={2025},
-  publisher={Wiley Online Library}
+- Paper citation:<br>
+@article{khoshnevis2025stochastic, <br>
+  title={Stochastic Generalized-Order Constitutive Modeling of Viscoelastic Spectra of Polyurea-Graphene Nanocomposites},<br>
+  author={Khoshnevis, Arman and Tzelepis, Demetrios A and Ginzburg, Valeriy V and Zayernouri, Mohsen},<br>
+  journal={Engineering Reports},<br>
+  volume={7},<br>
+  number={9},<br>
+  pages={e70367},<br>
+  year={2025},<br>
+  publisher={Wiley Online Library}<br>
 }
 
 ## Contributions
