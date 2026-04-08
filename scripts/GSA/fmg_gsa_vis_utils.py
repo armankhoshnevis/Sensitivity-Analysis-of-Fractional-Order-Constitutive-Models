@@ -6,7 +6,7 @@ from openpyxl import load_workbook
 from openpyxl.utils.cell import range_boundaries
 
 # Plot the sensitivity indices
-def plot_sensitivity_indices(S, E, N, HS, w_freq, GnP_list, params_list, file_path):
+def plot_global_sensitivity_indices(S, E, N, HS, w_freq, GnP_list, params_list, file_path):
     """Plot variation of sensitivity indices over decades of shifted frequency
 
     Args:

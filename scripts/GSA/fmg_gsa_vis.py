@@ -3,7 +3,7 @@ import argparse
 import numpy as np
 
 from fmg_gsa_vis_utils import (
-    plot_sensitivity_indices,
+    plot_global_sensitivity_indices,
     read_excel_range,
     plot_Linf_grouped
 )
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     params_list = config['params_list']
     file_path = config['file_path']
     
-    plot_sensitivity_indices(
+    plot_global_sensitivity_indices(
         S=args.S,
         E=args.E,
         N=args.N,
