@@ -51,7 +51,12 @@ nav:
   - Home: index.md
   - Dataset: dataset.md
   - Constitutive Models: constitutive_models.md
-  - Sensitivity Analysis:
+  - Sensitivity Analysis: 
+      - Sensitivity Analysis: sensitivity_analysis.md
       - Local Sensitivity Analysis: lsa.md
       - Global Sensitivity Analysis: gsa.md
+  - Results Summary: results.md
   - Configs: configs.md
+  - API Reference:
+      - Local Sensitivity Analysis: lsa_api.md
+      - Global Sensitivity Analysis: gsa_api.md
