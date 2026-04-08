@@ -2,7 +2,7 @@ site_name: Sensitivity-Analysis-of-Fractional-Constitutive-Models
 site_description: Sensitivity Analysis for Fractional-Order Constitutive Models
 site_author: Arman Khoshnevis
 
-repo_url: https://github.com/armankhoshnevis/BI-and-UQ-of-Fractional-Order-Constitutive-Models
+repo_url: https://github.com/armankhoshnevis/Sensitivity-Analysis-of-Fractional-Constitutive-Models
 repo_name: Sensitivity-Analysis-of-Fractional-Constitutive-Models
 docs_dir: docs
 site_dir: site
