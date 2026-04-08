@@ -15,10 +15,10 @@ if __name__ == "__main__":
     parser.add_argument('--N', type=int, help='Number of samples (N = 2**m)')
     parser.add_argument('--HS', type=int, help='Value of Hard Segment Weight Fraction (e.g., 20, 30, or 40)')
     args = parser.parse_args()
+
+    w_freq = np.logspace(-8, 2, 500)
     
-    w_freq = np.logspace(-8, 2, 100)
-    
-    with open(f'../../configs/{args.HS}HSWF_FMG_Config.json', 'r') as config_file:
+    with open(f'../../configs/GSA/{args.HS}HSWF_FMG_Config.json', 'r') as config_file:
         config = json.load(config_file)
     
     GnP_list = config['GnP_list']
@@ -62,6 +62,6 @@ if __name__ == "__main__":
     plot_Linf_grouped(
         Linf_Ep_mean,
         Linf_Ep_std,
-        ylabel=r"$||\bar{S}_{" + args.ylabel_input + r"}||_{L_{\infty}}$",
-        save_path="../../results/GSA/GSA_Linf_{" + args.ylabel_input + r"}_FMG"
+        ylabel=r"$||\bar{S}_{E^{\prime}}||_{L_{\infty}}$",  # E^{\prime} or E^{\prime\prime} or |E^{*}|
+        save_path="../../results/GSA/GSA_Linf_Ep_FMG"  # Ep or Epp or Ecomplex
     )
