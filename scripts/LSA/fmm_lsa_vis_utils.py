@@ -62,7 +62,7 @@ def read_excel_range(filename, cell_range):
         cell_range (str): Range of cells to read.
 
     Returns:
-        numpy.ndarray: Array of values from the specified range.
+        np.ndarray: A NumPy array containing the values from the specified cell range.
     """
     wb = load_workbook(filename=filename, data_only=True, read_only=True)
     ws = wb["Sheet1"]

@@ -81,7 +81,7 @@ def perform_sensitivity_analysis(SA_problem, N_values, w_freq, column_names, fil
         GnP_idx (int): The index of the group name in GnP_list for which to perform sensitivity analysis.
 
     Returns:
-        None
+        This function writes sensitivity analysis results to Excel files and does not return a value.
     """
     # Initialize Excel writers for storing the sensitivity indices
     xlsx_wrtr_S1_Ep = pd.ExcelWriter(f'{file_path["save_path"]}/S1_Ep_{HS}_{GnP_list[GnP_idx]}.xlsx', engine='openpyxl')
