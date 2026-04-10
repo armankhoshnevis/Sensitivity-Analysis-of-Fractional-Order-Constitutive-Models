@@ -88,18 +88,19 @@ def run_monte_carlo(funcs_dEp, funcs_dEpp, bounds, params_list, w_freq, n_mc=10*
         w_freq (ndarray): Array of frequency values used in the simulation.
         n_mc (int): Number of Monte Carlo iterations.
     Returns:
-        results (dict): Dictionary containing arrays of sensitivity coefficients for Ep, Epp, and Estar.
+        realized_indices (dict): Dictionary containing arrays of sensitivity indices for all moduli.
     """
     (lower_bound1, upper_bound1), (lower_bound2, upper_bound2), (lower_bound3, upper_bound3) = bounds[:3]
     (lower_bound4, upper_bound4), (lower_bound5, upper_bound5), (lower_bound6, upper_bound6) = bounds[3:]
     
-    results = {
+    # Initialize arrays to store normalized sensitivity indices for each modulus, parameter and frequency
+    realized_indices = {
         'Ep': {p: np.zeros((n_mc, len(w_freq))) for p in params_list},
         'Epp': {p: np.zeros((n_mc, len(w_freq))) for p in params_list},
-        'Ecomplex': {p: np.zeros((n_mc, len(w_freq))) for p in params_list}
+        'Ecomplex': {p: np.zeros((n_mc, len(w_freq))) for p in params_list},
     }
 
-    # Process samples in batches to manage memory usage
+    # Process samples in batches
     print(f"Starting Monte Carlo simulation with {n_mc} iterations...")
     for start_idx in range(0, n_mc, batch_size):
         end_idx = min(start_idx + batch_size, n_mc)
@@ -137,34 +138,41 @@ def run_monte_carlo(funcs_dEp, funcs_dEpp, bounds, params_list, w_freq, n_mc=10*
             dEp_val = funcs_dEp[p](*args)
             dEpp_val = funcs_dEpp[p](*args)
             
-            results['Ep'][p][start_idx:end_idx, :] = dEp_val * xv / Ep
-            results['Epp'][p][start_idx:end_idx, :] = dEpp_val * xv / Epp
-            results['Ecomplex'][p][start_idx:end_idx, :] = (xv / Ecomplex) * np.sqrt(dEp_val**2 + dEpp_val**2)
+            realized_indices['Ep'][p][start_idx:end_idx, :] = dEp_val * xv / Ep
+            realized_indices['Epp'][p][start_idx:end_idx, :] = dEpp_val * xv / Epp
+            realized_indices['Ecomplex'][p][start_idx:end_idx, :] = (xv / Ecomplex) * np.sqrt(dEp_val**2 + dEpp_val**2)
 
         print(f"Completed {end_idx} / {n_mc} iterations")
-    
-    print("Monte Carlo simulation completed successfully.")
-    return results
 
-def save_statistics_npz(results, params, w_freq, HS, GnP, file_path):
-    """Calculates statistics and saves as a compressed NumPy archive.
+    print("Monte Carlo simulation completed successfully.")
+    return realized_indices
+
+def save_statistics_npz(realized_indices, params, w_freq, HS, GnP, file_path):
+    """Calculates mean and standard deviation of sensitivity indices, and L1 norm of mean sensitivity indices, followed by saving to a compressed NumPy archive.
     Args:
-        results (dict): Dictionary containing arrays of sensitivity coefficients for Ep, Epp, and Ecomplex.
+        realized_indices (dict): Dictionary containing arrays of sensitivity indices for all moduli.
         params (list): List of parameter names.
         w_freq (ndarray): Array of frequency values used in the simulation.
         HS (int): Heat treatment condition.
         GnP (str): GnP loading condition.
         file_path (dict): Dictionary containing paths to save the data."""
+    log_w_freq = np.log(w_freq)
     save_data = {}
     for key in ['Ep', 'Epp', 'Ecomplex']:
-        matrix = np.zeros((len(params)*2 + 1, len(w_freq)))
+        mean_std_indices = np.zeros((len(params)*2 + 1, len(w_freq)))
+        l1_array = np.zeros(len(params))
         
         for idx, p in enumerate(params):
-            matrix[idx*2, :] = np.mean(results[key][p], axis=0)
-            matrix[idx*2 + 1, :] = np.std(results[key][p], axis=0, ddof=1)
+            mean_sensitivity_index = np.mean(realized_indices[key][p], axis=0)
+            std_sensitivity_index = np.std(realized_indices[key][p], axis=0, ddof=1)
+
+            mean_std_indices[idx*2, :] = mean_sensitivity_index
+            mean_std_indices[idx*2 + 1, :] = std_sensitivity_index
+
+            l1_array[idx] = np.trapezoid(np.abs(mean_sensitivity_index), x=log_w_freq)
             
-        matrix[-1, :] = w_freq
-        save_data[f'all_lsi_{key}_{HS}HS_{GnP}'] = matrix
+        save_data[f'all_lsi_{key}_{HS}HS_{GnP}'] = mean_std_indices
+        save_data[f'L1_lsi_{key}_{HS}HS_{GnP}'] = l1_array
 
     np.savez_compressed(file_path['save_path'] + f'/{HS}HS_{GnP}.npz', **save_data)
     print(f"Statistics saved successfully to {file_path['save_path']}/{HS}HS_{GnP}.npz")
