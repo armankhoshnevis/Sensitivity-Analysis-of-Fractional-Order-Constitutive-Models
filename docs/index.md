@@ -6,7 +6,7 @@ This repository provides a computational framework for conducting sensitivity an
 * **`configs/`**: Configuration files defining model parameters and their bounds for sensitivity analysis, and simulation settings.
 * **`dataset/`**: Optimized model parameters.
 * **`docs/`**: Markdown source files for the MkDocs documentation site.
-* **`notebooks/`**: Interactive Jupyter notebooks detailing the workflow—from data preprocessing and model implementation to final visualizations.
+* **`notebooks/`**: Interactive Jupyter notebooks detailing the workflow, from data preprocessing and model implementation to final visualizations.
 * **`results/`**: Exported sensitivity indices and plots.
 * **`scripts/`**: Python main scripts and modules for LSA and GSA for both models.
 
@@ -49,6 +49,8 @@ cd script
 python fmg_gsa_main.py --HS 20 --GnP_idx 0
 python fmg_gsa_vis.py --S 'S1' --E 'Ep' --N 2048 --HS 20
 ```
+
+**Note:** GSA scripts perform sensitivity analysis for a given list of number of realizations. Please adjust the script accordingly.
 
 * Local Sensitivity Analysis
 ```bash
