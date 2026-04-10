@@ -27,13 +27,13 @@ def plot_local_sensitivity_indices(E_type, HS, GnP_list, file_path):
         file_name = f'{file_path["save_path"]}/{HS}HS_{GnP}.npz'
         array_key = f'all_lsi_{E_type}_{HS}HS_{GnP}'
         data = np.load(file_name)
-        matrix = data[array_key]
-        w_freq = matrix[-1, :]
+        mean_std_indices = data[array_key]
+        w_freq = mean_std_indices[-1, :]
 
         for i in range(len(param_symbols)):
             ax = axs[subplot_idx[i]]
             
-            mean_val = matrix[i * 2, :]
+            mean_val = mean_std_indices[i * 2, :]
             
             ax.plot(w_freq, mean_val, label=f'{GnP}', linestyle='-', linewidth=1.5)
             
