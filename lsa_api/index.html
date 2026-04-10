@@ -1681,7 +1681,7 @@ Args:
     w_freq (ndarray): Array of frequency values used in the simulation.
     n_mc (int): Number of Monte Carlo iterations.
 Returns:
-    results (dict): Dictionary containing arrays of sensitivity coefficients for Ep, Epp, and Estar.</p>
+    realized_indices (dict): Dictionary containing arrays of sensitivity indices for all moduli.</p>
 
 
             <details class="mkdocstrings-source">
@@ -1751,7 +1751,8 @@ Returns:
 <span class="normal">144</span>
 <span class="normal">145</span>
 <span class="normal">146</span>
-<span class="normal">147</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_monte_carlo</span><span class="p">(</span><span class="n">funcs_dEp</span><span class="p">,</span> <span class="n">funcs_dEpp</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">params_list</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">n_mc</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">50_000</span><span class="p">):</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_monte_carlo</span><span class="p">(</span><span class="n">funcs_dEp</span><span class="p">,</span> <span class="n">funcs_dEpp</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">params_list</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">n_mc</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">50_000</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Executes the MC simulation and returns result arrays.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        funcs_dEp (dict): Dictionary of lambdified functions for derivatives of storage modulus.</span>
@@ -1760,18 +1761,19 @@ Returns:
 <span class="sd">        w_freq (ndarray): Array of frequency values used in the simulation.</span>
 <span class="sd">        n_mc (int): Number of Monte Carlo iterations.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        results (dict): Dictionary containing arrays of sensitivity coefficients for Ep, Epp, and Estar.</span>
+<span class="sd">        realized_indices (dict): Dictionary containing arrays of sensitivity indices for all moduli.</span>
 <span class="sd">    """</span>
     <span class="p">(</span><span class="n">lower_bound1</span><span class="p">,</span> <span class="n">upper_bound1</span><span class="p">),</span> <span class="p">(</span><span class="n">lower_bound2</span><span class="p">,</span> <span class="n">upper_bound2</span><span class="p">),</span> <span class="p">(</span><span class="n">lower_bound3</span><span class="p">,</span> <span class="n">upper_bound3</span><span class="p">)</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
     <span class="p">(</span><span class="n">lower_bound4</span><span class="p">,</span> <span class="n">upper_bound4</span><span class="p">),</span> <span class="p">(</span><span class="n">lower_bound5</span><span class="p">,</span> <span class="n">upper_bound5</span><span class="p">),</span> <span class="p">(</span><span class="n">lower_bound6</span><span class="p">,</span> <span class="n">upper_bound6</span><span class="p">)</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
 
-    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Initialize arrays to store normalized sensitivity indices for each modulus, parameter and frequency</span>
+    <span class="n">realized_indices</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">'Ep'</span><span class="p">:</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_mc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">},</span>
         <span class="s1">'Epp'</span><span class="p">:</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_mc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">},</span>
-        <span class="s1">'Ecomplex'</span><span class="p">:</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_mc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">}</span>
+        <span class="s1">'Ecomplex'</span><span class="p">:</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_mc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">},</span>
     <span class="p">}</span>
 
-    <span class="c1"># Process samples in batches to manage memory usage</span>
+    <span class="c1"># Process samples in batches</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Starting Monte Carlo simulation with </span><span class="si">{</span><span class="n">n_mc</span><span class="si">}</span><span class="s2"> iterations..."</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">start_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_mc</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
         <span class="n">end_idx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">start_idx</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">n_mc</span><span class="p">)</span>
@@ -1809,14 +1811,14 @@ Returns:
             <span class="n">dEp_val</span> <span class="o">=</span> <span class="n">funcs_dEp</span><span class="p">[</span><span class="n">p</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
             <span class="n">dEpp_val</span> <span class="o">=</span> <span class="n">funcs_dEpp</span><span class="p">[</span><span class="n">p</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
-            <span class="n">results</span><span class="p">[</span><span class="s1">'Ep'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dEp_val</span> <span class="o">*</span> <span class="n">xv</span> <span class="o">/</span> <span class="n">Ep</span>
-            <span class="n">results</span><span class="p">[</span><span class="s1">'Epp'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dEpp_val</span> <span class="o">*</span> <span class="n">xv</span> <span class="o">/</span> <span class="n">Epp</span>
-            <span class="n">results</span><span class="p">[</span><span class="s1">'Ecomplex'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">xv</span> <span class="o">/</span> <span class="n">Ecomplex</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dEp_val</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dEpp_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">realized_indices</span><span class="p">[</span><span class="s1">'Ep'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dEp_val</span> <span class="o">*</span> <span class="n">xv</span> <span class="o">/</span> <span class="n">Ep</span>
+            <span class="n">realized_indices</span><span class="p">[</span><span class="s1">'Epp'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dEpp_val</span> <span class="o">*</span> <span class="n">xv</span> <span class="o">/</span> <span class="n">Epp</span>
+            <span class="n">realized_indices</span><span class="p">[</span><span class="s1">'Ecomplex'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">xv</span> <span class="o">/</span> <span class="n">Ecomplex</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dEp_val</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dEpp_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Completed </span><span class="si">{</span><span class="n">end_idx</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">n_mc</span><span class="si">}</span><span class="s2"> iterations"</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Monte Carlo simulation completed successfully."</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">results</span>
+    <span class="k">return</span> <span class="n">realized_indices</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1827,16 +1829,16 @@ Returns:
 
 
 <h3 id="scripts.LSA.fmg_lsa_utils.save_statistics_npz" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">save_statistics_npz</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">HS</span><span class="p">,</span> <span class="n">GnP</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">save_statistics_npz</span><span class="p">(</span><span class="n">realized_indices</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">HS</span><span class="p">,</span> <span class="n">GnP</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Calculates statistics and saves as a compressed NumPy archive.
+        <p>Calculates mean and standard deviation of sensitivity indices, and L1 norm of mean sensitivity indices, followed by saving to a compressed NumPy archive.
 Args:
-    results (dict): Dictionary containing arrays of sensitivity coefficients for Ep, Epp, and Ecomplex.
+    realized_indices (dict): Dictionary containing arrays of sensitivity indices for all moduli.
     params (list): List of parameter names.
     w_freq (ndarray): Array of frequency values used in the simulation.
     HS (int): Heat treatment condition.
@@ -1846,8 +1848,7 @@ Args:
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>scripts/LSA/fmg_lsa_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">149</span>
-<span class="normal">150</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
 <span class="normal">153</span>
@@ -1867,25 +1868,40 @@ Args:
 <span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
-<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_statistics_npz</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">HS</span><span class="p">,</span> <span class="n">GnP</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Calculates statistics and saves as a compressed NumPy archive.</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_statistics_npz</span><span class="p">(</span><span class="n">realized_indices</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">HS</span><span class="p">,</span> <span class="n">GnP</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Calculates mean and standard deviation of sensitivity indices, and L1 norm of mean sensitivity indices, followed by saving to a compressed NumPy archive.</span>
 <span class="sd">    Args:</span>
-<span class="sd">        results (dict): Dictionary containing arrays of sensitivity coefficients for Ep, Epp, and Ecomplex.</span>
+<span class="sd">        realized_indices (dict): Dictionary containing arrays of sensitivity indices for all moduli.</span>
 <span class="sd">        params (list): List of parameter names.</span>
 <span class="sd">        w_freq (ndarray): Array of frequency values used in the simulation.</span>
 <span class="sd">        HS (int): Heat treatment condition.</span>
 <span class="sd">        GnP (str): GnP loading condition.</span>
 <span class="sd">        file_path (dict): Dictionary containing paths to save the data."""</span>
+    <span class="n">log_w_freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)</span>
     <span class="n">save_data</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'Ep'</span><span class="p">,</span> <span class="s1">'Epp'</span><span class="p">,</span> <span class="s1">'Ecomplex'</span><span class="p">]:</span>
-        <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span>
+        <span class="n">mean_std_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span>
+        <span class="n">l1_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="n">idx</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">p</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="n">idx</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">p</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">mean_sensitivity_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">realized_indices</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">p</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">std_sensitivity_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">realized_indices</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">p</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">matrix</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">w_freq</span>
-        <span class="n">save_data</span><span class="p">[</span><span class="sa">f</span><span class="s1">'all_lsi_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">matrix</span>
+            <span class="n">mean_std_indices</span><span class="p">[</span><span class="n">idx</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mean_sensitivity_index</span>
+            <span class="n">mean_std_indices</span><span class="p">[</span><span class="n">idx</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">std_sensitivity_index</span>
+
+            <span class="n">l1_array</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mean_sensitivity_index</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="n">log_w_freq</span><span class="p">)</span>
+
+        <span class="n">save_data</span><span class="p">[</span><span class="sa">f</span><span class="s1">'all_lsi_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_std_indices</span>
+        <span class="n">save_data</span><span class="p">[</span><span class="sa">f</span><span class="s1">'L1_lsi_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">l1_array</span>
 
     <span class="n">np</span><span class="o">.</span><span class="n">savez_compressed</span><span class="p">(</span><span class="n">file_path</span><span class="p">[</span><span class="s1">'save_path'</span><span class="p">]</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">'/</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">.npz'</span><span class="p">,</span> <span class="o">**</span><span class="n">save_data</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Statistics saved successfully to </span><span class="si">{</span><span class="n">file_path</span><span class="p">[</span><span class="s1">'save_path'</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s2">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s2">.npz"</span><span class="p">)</span>
@@ -1956,8 +1972,7 @@ Args:
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>scripts/LSA/fmg_lsa_vis_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 6</span>
-<span class="normal"> 7</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
@@ -2002,7 +2017,8 @@ Args:
 <span class="normal">49</span>
 <span class="normal">50</span>
 <span class="normal">51</span>
-<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_local_sensitivity_indices</span><span class="p">(</span><span class="n">E_type</span><span class="p">,</span> <span class="n">HS</span><span class="p">,</span> <span class="n">GnP_list</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_local_sensitivity_indices</span><span class="p">(</span><span class="n">E_type</span><span class="p">,</span> <span class="n">HS</span><span class="p">,</span> <span class="n">GnP_list</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Plots the local sensitivity indices for the specified modulus type.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        E_type (str): Type of modulus ('Ep', 'Epp', or 'Ecomplex').</span>
@@ -2025,13 +2041,13 @@ Args:
         <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">file_path</span><span class="p">[</span><span class="s2">"save_path"</span><span class="p">]</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">.npz'</span>
         <span class="n">array_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'all_lsi_</span><span class="si">{</span><span class="n">E_type</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">'</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-        <span class="n">matrix</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">array_key</span><span class="p">]</span>
-        <span class="n">w_freq</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">mean_std_indices</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">array_key</span><span class="p">]</span>
+        <span class="n">w_freq</span> <span class="o">=</span> <span class="n">mean_std_indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param_symbols</span><span class="p">)):</span>
             <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">subplot_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
 
-            <span class="n">mean_val</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">mean_val</span> <span class="o">=</span> <span class="n">mean_std_indices</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
 
             <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w_freq</span><span class="p">,</span> <span class="n">mean_val</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
 
@@ -2140,8 +2156,7 @@ Args:
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>scripts/LSA/fmg_lsa_vis_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
-<span class="normal">56</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
@@ -2164,7 +2179,8 @@ Args:
 <span class="normal">76</span>
 <span class="normal">77</span>
 <span class="normal">78</span>
-<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_excel_range</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">cell_range</span><span class="p">):</span>
+<span class="normal">79</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_excel_range</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">cell_range</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Read a specified range of cells from an Excel file and return it as a NumPy array.</span>
 
 <span class="sd">    Args:</span>
@@ -2338,8 +2354,7 @@ Args:
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>scripts/LSA/fmg_lsa_vis_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 82</span>
-<span class="normal"> 83</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 83</span>
 <span class="normal"> 84</span>
 <span class="normal"> 85</span>
 <span class="normal"> 86</span>
@@ -2398,7 +2413,8 @@ Args:
 <span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
-<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_L1_grouped</span><span class="p">(</span><span class="n">mean_S</span><span class="p">,</span>
+<span class="normal">142</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_L1_grouped</span><span class="p">(</span><span class="n">mean_S</span><span class="p">,</span>
                     <span class="n">std_S</span><span class="p">,</span>
                     <span class="n">ylabel</span><span class="p">,</span>
                     <span class="n">params_list</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">"$E_</span><span class="si">{c_1}</span><span class="s2">$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$\tau_</span><span class="si">{c_1}</span><span class="s2">$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$\alpha_1$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$\beta_1$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$E_</span><span class="si">{c_2}</span><span class="s2">$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$\tau_</span><span class="si">{c_2}</span><span class="s2">$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$\alpha_2$"</span><span class="p">],</span>
@@ -2730,7 +2746,7 @@ Args:
     w_freq (ndarray): Array of frequency values used in the simulation.
     n_mc (int): Number of Monte Carlo iterations.
 Returns:
-    results (dict): Dictionary containing arrays of sensitivity coefficients for Ep, Epp, and Estar.</p>
+    realized_indices (dict): Dictionary containing arrays of sensitivity indices for all moduli.</p>
 
 
             <details class="mkdocstrings-source">
@@ -2801,7 +2817,8 @@ Returns:
 <span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
-<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_monte_carlo</span><span class="p">(</span><span class="n">funcs_dEp</span><span class="p">,</span> <span class="n">funcs_dEpp</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">params_list</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">n_mc</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">50_000</span><span class="p">):</span>
+<span class="normal">149</span>
+<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_monte_carlo</span><span class="p">(</span><span class="n">funcs_dEp</span><span class="p">,</span> <span class="n">funcs_dEpp</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">params_list</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">n_mc</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">50_000</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Executes the MC simulation and returns result arrays.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        funcs_dEp (dict): Dictionary of lambdified functions for derivatives of storage modulus.</span>
@@ -2810,18 +2827,19 @@ Returns:
 <span class="sd">        w_freq (ndarray): Array of frequency values used in the simulation.</span>
 <span class="sd">        n_mc (int): Number of Monte Carlo iterations.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        results (dict): Dictionary containing arrays of sensitivity coefficients for Ep, Epp, and Estar.</span>
+<span class="sd">        realized_indices (dict): Dictionary containing arrays of sensitivity indices for all moduli.</span>
 <span class="sd">    """</span>
     <span class="p">(</span><span class="n">lower_bound1</span><span class="p">,</span> <span class="n">upper_bound1</span><span class="p">),</span> <span class="p">(</span><span class="n">lower_bound2</span><span class="p">,</span> <span class="n">upper_bound2</span><span class="p">),</span> <span class="p">(</span><span class="n">lower_bound3</span><span class="p">,</span> <span class="n">upper_bound3</span><span class="p">),</span> <span class="p">(</span><span class="n">lower_bound4</span><span class="p">,</span> <span class="n">upper_bound4</span><span class="p">)</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
     <span class="p">(</span><span class="n">lower_bound5</span><span class="p">,</span> <span class="n">upper_bound5</span><span class="p">),</span> <span class="p">(</span><span class="n">lower_bound6</span><span class="p">,</span> <span class="n">upper_bound6</span><span class="p">),</span> <span class="p">(</span><span class="n">lower_bound7</span><span class="p">,</span> <span class="n">upper_bound7</span><span class="p">)</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
 
-    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Initialize arrays to store normalized sensitivity indices for each modulus, parameter and frequency</span>
+    <span class="n">realized_indices</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">'Ep'</span><span class="p">:</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_mc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">},</span>
         <span class="s1">'Epp'</span><span class="p">:</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_mc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">},</span>
-        <span class="s1">'Ecomplex'</span><span class="p">:</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_mc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">}</span>
+        <span class="s1">'Ecomplex'</span><span class="p">:</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_mc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">},</span>
     <span class="p">}</span>
 
-    <span class="c1"># Process samples in batches to manage memory usage</span>
+    <span class="c1"># Process samples in batches</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Starting Monte Carlo simulation with </span><span class="si">{</span><span class="n">n_mc</span><span class="si">}</span><span class="s2"> iterations..."</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">start_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_mc</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
         <span class="n">end_idx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">start_idx</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">n_mc</span><span class="p">)</span>
@@ -2850,7 +2868,7 @@ Returns:
         <span class="n">Epp</span> <span class="o">=</span> <span class="n">numerator_Epp_1</span> <span class="o">/</span> <span class="n">denominator_1</span> <span class="o">+</span> <span class="n">numerator_Epp_2</span> <span class="o">/</span> <span class="n">denominator_2</span>
         <span class="n">Ecomplex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Ep</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Epp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-        <span class="c1"># Calculate normalized local sensitivity coefficients</span>
+        <span class="c1"># Calculate normalized local sensitivity indices</span>
         <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">xv</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">params_list</span><span class="p">,</span> <span class="p">[</span><span class="n">E_c1</span><span class="p">,</span> <span class="n">tau_c1</span><span class="p">,</span> <span class="n">alpha_1</span><span class="p">,</span> <span class="n">beta_1</span><span class="p">,</span> <span class="n">E_c2</span><span class="p">,</span> <span class="n">tau_c2</span><span class="p">,</span> <span class="n">alpha_2</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'E_c1'</span><span class="p">,</span> <span class="s1">'tau_c1'</span><span class="p">,</span> <span class="s1">'alpha_1'</span><span class="p">,</span> <span class="s1">'beta_1'</span><span class="p">]:</span>
                 <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">E_c1</span><span class="p">,</span> <span class="n">tau_c1</span><span class="p">,</span> <span class="n">alpha_1</span><span class="p">,</span> <span class="n">beta_1</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">)</span>
@@ -2860,14 +2878,14 @@ Returns:
             <span class="n">dEp_val</span> <span class="o">=</span> <span class="n">funcs_dEp</span><span class="p">[</span><span class="n">p</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
             <span class="n">dEpp_val</span> <span class="o">=</span> <span class="n">funcs_dEpp</span><span class="p">[</span><span class="n">p</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
-            <span class="n">results</span><span class="p">[</span><span class="s1">'Ep'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dEp_val</span> <span class="o">*</span> <span class="n">xv</span> <span class="o">/</span> <span class="n">Ep</span>
-            <span class="n">results</span><span class="p">[</span><span class="s1">'Epp'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dEpp_val</span> <span class="o">*</span> <span class="n">xv</span> <span class="o">/</span> <span class="n">Epp</span>
-            <span class="n">results</span><span class="p">[</span><span class="s1">'Ecomplex'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">xv</span> <span class="o">/</span> <span class="n">Ecomplex</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dEp_val</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dEpp_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">realized_indices</span><span class="p">[</span><span class="s1">'Ep'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dEp_val</span> <span class="o">*</span> <span class="n">xv</span> <span class="o">/</span> <span class="n">Ep</span>
+            <span class="n">realized_indices</span><span class="p">[</span><span class="s1">'Epp'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dEpp_val</span> <span class="o">*</span> <span class="n">xv</span> <span class="o">/</span> <span class="n">Epp</span>
+            <span class="n">realized_indices</span><span class="p">[</span><span class="s1">'Ecomplex'</span><span class="p">][</span><span class="n">p</span><span class="p">][</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">xv</span> <span class="o">/</span> <span class="n">Ecomplex</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dEp_val</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dEpp_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Completed </span><span class="si">{</span><span class="n">end_idx</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">n_mc</span><span class="si">}</span><span class="s2"> iterations"</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Monte Carlo simulation completed successfully."</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">results</span>
+    <span class="k">return</span> <span class="n">realized_indices</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2878,16 +2896,16 @@ Returns:
 
 
 <h3 id="scripts.LSA.fmm_lsa_utils.save_statistics_npz" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">save_statistics_npz</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">HS</span><span class="p">,</span> <span class="n">GnP</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">save_statistics_npz</span><span class="p">(</span><span class="n">realized_indices</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">HS</span><span class="p">,</span> <span class="n">GnP</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span></code>
 
 </h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Calculates statistics and saves as a compressed NumPy archive.
+        <p>Calculates mean and standard deviation of sensitivity indices, and L1 norm of mean sensitivity indices, followed by saving to a compressed NumPy archive.
 Args:
-    results (dict): Dictionary containing arrays of sensitivity coefficients for Ep, Epp, and Ecomplex.
+    realized_indices (dict): Dictionary containing arrays of sensitivity indices for all moduli.
     params (list): List of parameter names.
     w_freq (ndarray): Array of frequency values used in the simulation.
     HS (int): Heat treatment condition.
@@ -2897,8 +2915,7 @@ Args:
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>scripts/LSA/fmm_lsa_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
-<span class="normal">152</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">152</span>
 <span class="normal">153</span>
 <span class="normal">154</span>
 <span class="normal">155</span>
@@ -2918,25 +2935,40 @@ Args:
 <span class="normal">169</span>
 <span class="normal">170</span>
 <span class="normal">171</span>
-<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_statistics_npz</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">HS</span><span class="p">,</span> <span class="n">GnP</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Calculates statistics and saves as a compressed NumPy archive.</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_statistics_npz</span><span class="p">(</span><span class="n">realized_indices</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">w_freq</span><span class="p">,</span> <span class="n">HS</span><span class="p">,</span> <span class="n">GnP</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Calculates mean and standard deviation of sensitivity indices, and L1 norm of mean sensitivity indices, followed by saving to a compressed NumPy archive.</span>
 <span class="sd">    Args:</span>
-<span class="sd">        results (dict): Dictionary containing arrays of sensitivity coefficients for Ep, Epp, and Ecomplex.</span>
+<span class="sd">        realized_indices (dict): Dictionary containing arrays of sensitivity indices for all moduli.</span>
 <span class="sd">        params (list): List of parameter names.</span>
 <span class="sd">        w_freq (ndarray): Array of frequency values used in the simulation.</span>
 <span class="sd">        HS (int): Heat treatment condition.</span>
 <span class="sd">        GnP (str): GnP loading condition.</span>
 <span class="sd">        file_path (dict): Dictionary containing paths to save the data."""</span>
+    <span class="n">log_w_freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)</span>
     <span class="n">save_data</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'Ep'</span><span class="p">,</span> <span class="s1">'Epp'</span><span class="p">,</span> <span class="s1">'Ecomplex'</span><span class="p">]:</span>
-        <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span>
+        <span class="n">mean_std_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_freq</span><span class="p">)))</span>
+        <span class="n">l1_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="n">idx</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">p</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">matrix</span><span class="p">[</span><span class="n">idx</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">p</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">mean_sensitivity_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">realized_indices</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">p</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">std_sensitivity_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">realized_indices</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">p</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">matrix</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">w_freq</span>
-        <span class="n">save_data</span><span class="p">[</span><span class="sa">f</span><span class="s1">'all_lsi_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">matrix</span>
+            <span class="n">mean_std_indices</span><span class="p">[</span><span class="n">idx</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mean_sensitivity_index</span>
+            <span class="n">mean_std_indices</span><span class="p">[</span><span class="n">idx</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">std_sensitivity_index</span>
+
+            <span class="n">l1_array</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mean_sensitivity_index</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="n">log_w_freq</span><span class="p">)</span>
+
+        <span class="n">save_data</span><span class="p">[</span><span class="sa">f</span><span class="s1">'all_lsi_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_std_indices</span>
+        <span class="n">save_data</span><span class="p">[</span><span class="sa">f</span><span class="s1">'L1_lsi_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">l1_array</span>
 
     <span class="n">np</span><span class="o">.</span><span class="n">savez_compressed</span><span class="p">(</span><span class="n">file_path</span><span class="p">[</span><span class="s1">'save_path'</span><span class="p">]</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">'/</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">.npz'</span><span class="p">,</span> <span class="o">**</span><span class="n">save_data</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Statistics saved successfully to </span><span class="si">{</span><span class="n">file_path</span><span class="p">[</span><span class="s1">'save_path'</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s2">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s2">.npz"</span><span class="p">)</span>
@@ -3077,13 +3109,13 @@ Args:
         <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">file_path</span><span class="p">[</span><span class="s2">"save_path"</span><span class="p">]</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">.npz'</span>
         <span class="n">array_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'all_lsi_</span><span class="si">{</span><span class="n">E_type</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">HS</span><span class="si">}</span><span class="s1">HS_</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">'</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-        <span class="n">matrix</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">array_key</span><span class="p">]</span>
-        <span class="n">w_freq</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">mean_std_indices</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">array_key</span><span class="p">]</span>
+        <span class="n">w_freq</span> <span class="o">=</span> <span class="n">mean_std_indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">param_symbols</span><span class="p">)):</span>
             <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">subplot_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
 
-            <span class="n">mean_val</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">mean_val</span> <span class="o">=</span> <span class="n">mean_std_indices</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
 
             <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w_freq</span><span class="p">,</span> <span class="n">mean_val</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">GnP</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
 

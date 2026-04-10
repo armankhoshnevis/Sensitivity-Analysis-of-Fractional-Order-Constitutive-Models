@@ -77,6 +77,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#fractional-order-constitutive-models" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -444,6 +449,24 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Constitutive Models
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -460,6 +483,56 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fractional-order-constitutive-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fractional-Order Constitutive Models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time-temperature-superposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Temperature Superposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notion-of-dimenssionless-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notion of Dimenssionless Number
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -813,6 +886,47 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fractional-order-constitutive-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fractional-Order Constitutive Models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time-temperature-superposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Temperature Superposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notion-of-dimenssionless-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notion of Dimenssionless Number
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -841,6 +955,7 @@
 
   <h1>Constitutive Models</h1>
 
+<h2 id="fractional-order-constitutive-models">Fractional-Order Constitutive Models</h2>
 <p>PUA nanocomposites exhibit microphase separation into a soft-phase matrix and a stiffer, percolated hard phase due to strong hydrogen bonding within the hard phase. Consistent with this morphology, we use two models, each with two parallel fractional branches: FMG–FMG model has an FMG branch for each of the soft-phase matrix and percolated hard phase; FMM–FMG model has an FMM branch for the soft-phase matrix and an FMG branch for the percolated hard phase. At the relatively low nanofiller loadings considered here, no separate nanoparticle branch is introduced, and fillers are assumed to be uniformly dispersed within the two phases. The schematic of the models are provided as follows:</p>
 <p><figure id="_figure-1"><img alt="FMM–FMG and FMG–FMG models" src="../images/Models.jpg"><figcaption>Figure 1: FMM–FMG and FMG–FMG models</figcaption></figure></p>
 <p>The resulting models use six to seven parameters: characteristic moduli <span class="arithmatex">\((E_{c_1}, E_{c_2})\)</span>, characteristic relaxation times <span class="arithmatex">\((\tau_{c_1}, \tau_{c_2})\)</span>, power exponents <span class="arithmatex">\((\alpha_1, \alpha_2)\)</span>, and an additional exponent <span class="arithmatex">\(\beta_1\)</span> associated with the second spring-pot element in the FMM branch. The equivalent storage and loss moduli are given by</p>
@@ -876,7 +991,9 @@ E''_{\mathrm{model}}(x)
 (x\tau_{c_k})^{2(\alpha_k-\beta_k)}
 }.
 \]</div>
-<p>Here, <span class="arithmatex">\(x = a_T \omega\)</span> is the shifted frequency. The shift factor <span class="arithmatex">\(a_T\)</span> is modeled using the two-state, two-time-scale (TS2) function, which captures the time–temperature superposition behavior of neat and nanocomposite PUAs over a broad temperature range. In TS2, the glass transition is represented as a smooth transition between low- and high-temperature Arrhenius regimes:</p>
+<p>Here, <span class="arithmatex">\(x = a_T \omega\)</span> is the shifted frequency. </p>
+<h2 id="time-temperature-superposition">Time Temperature Superposition</h2>
+<p>The shift factor <span class="arithmatex">\(a_T\)</span> is modeled using the two-state, two-time-scale (TS2) function, which captures the time–temperature superposition behavior of neat and nanocomposite PUAs over a broad temperature range. In TS2, the glass transition is represented as a smooth transition between low- and high-temperature Arrhenius regimes:</p>
 <div class="arithmatex">\[
 \ln(a_T)
 \equiv
@@ -897,6 +1014,16 @@ E''_{\mathrm{model}}(x)
 \right).
 \]</div>
 <p>Here, <span class="arithmatex">\(E_1\)</span> and <span class="arithmatex">\(E_2\)</span> are activation energies, <span class="arithmatex">\(\Delta S / R\)</span> is the dimensionless transition entropy, <span class="arithmatex">\(T^*\)</span> is the transition temperature, and <span class="arithmatex">\(T_0\)</span> is the reference temperature, taken as <span class="arithmatex">\(T_g\)</span>.</p>
+<h2 id="notion-of-dimenssionless-number">Notion of Dimenssionless Number</h2>
+<p>It is worth noting that the deterministic optimization used to obtain model parameters was enforced to satisfy a physically motivated constraint that links the characteristic time-scales of the two branches (phases). This constraint is derived from a new dimensionless number (<span class="arithmatex">\(\mathcal{N}_P\)</span>), introduced for each branch via the Buckingham-<span class="arithmatex">\(\Pi\)</span> theorem, defined as</p>
+<div class="arithmatex">\[
+\mathcal{N}_P = \left[\frac{\rho}{E}\right]^{1/2}\frac{L}{\tau},
+\]</div>
+<p>where for each branch, <span class="arithmatex">\(\rho\)</span> denotes the mass density, <span class="arithmatex">\(E\)</span> is the elastic modulus, <span class="arithmatex">\(L\)</span> is the characteristic length (average distance between neighboring hard-soft interfaces), and <span class="arithmatex">\(\tau\)</span> is the characteristic time. Using the velocity scale <span class="arithmatex">\(v\sim L/\tau\)</span>, one obtains <span class="arithmatex">\(\rho v^2 \sim \rho(L/\tau)^2\)</span> as a characteristic kinetic energy density, whereas <span class="arithmatex">\(E\)</span> provides the elastic energy density scale associated with strain energy. Therefore, <span class="arithmatex">\(\mathcal{N}_P\)</span> can be interpreted as the ratio of kinetic to elastic energy densities for each branch. Under our lumped modeling assumption that the two phases deform and move together as a single viscoelastic body, in addition to neglecting the differences in the density between the two phases <span class="arithmatex">\(\rho_1 \approx \rho_2 = 1.1 \pm 0.1\)</span> (<span class="arithmatex">\(\frac{g}{cm^3}\)</span>), and similar characteristic length (<span class="arithmatex">\(L\approx 10-20\)</span> (<span class="arithmatex">\(nm\)</span>)), we hypothesized that this dimensionless number should be identical across branches. This yields the following constraint relating the characteristic times</p>
+<div class="arithmatex">\[
+    \tau_{c,2} = \tau_{c,1} \times \left(\frac{E_{c,1}}{E_{c,2}}\right)^{1/2}.
+\]</div>
+<p>Another interpretation of this dimenssionless number can be found in the <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/eng2.70367">paper</a> that is linked to this repository.</p>
 <p>Ultimately, we want to determine which of the 6-7 model parameters are the most and least influential parameters impacting the model output variation, through systematic local-to-global sensitivity analysis.</p>
 
 

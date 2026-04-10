@@ -1142,7 +1142,7 @@
 <li><strong><code>configs/</code></strong>: Configuration files defining model parameters and their bounds for sensitivity analysis, and simulation settings.</li>
 <li><strong><code>dataset/</code></strong>: Optimized model parameters.</li>
 <li><strong><code>docs/</code></strong>: Markdown source files for the MkDocs documentation site.</li>
-<li><strong><code>notebooks/</code></strong>: Interactive Jupyter notebooks detailing the workflow—from data preprocessing and model implementation to final visualizations.</li>
+<li><strong><code>notebooks/</code></strong>: Interactive Jupyter notebooks detailing the workflow, from data preprocessing and model implementation to final visualizations.</li>
 <li><strong><code>results/</code></strong>: Exported sensitivity indices and plots.</li>
 <li><strong><code>scripts/</code></strong>: Python main scripts and modules for LSA and GSA for both models.</li>
 </ul>
@@ -1179,6 +1179,7 @@ conda activate SA_Project
 python fmg_gsa_main.py --HS 20 --GnP_idx 0
 python fmg_gsa_vis.py --S 'S1' --E 'Ep' --N 2048 --HS 20
 </code></pre>
+<p><strong>Note:</strong> GSA scripts perform sensitivity analysis for a given list of number of realizations. Please adjust the script accordingly.</p>
 <ul>
 <li>Local Sensitivity Analysis</li>
 </ul>
@@ -1196,24 +1197,28 @@ sbatch gsa.sb
 <h2 id="citation-requirements">Citation Requirements</h2>
 <p>If you use this software, please cite it and its corresponding paper, as:</p>
 <ul>
-<li>Software citation:</li>
+<li>
+<p><strong>Software citation</strong>:</p>
+<ul>
 <li>
 <p>APA style: Khoshnevis, A. (2026). Sensitivity Analysis of Fractional Constitutive Models (Version 1.0.0) [Computer software]. https://github.com/armankhoshnevis/Sensitivity-Analysis-of-Fractional-Constitutive-Models</p>
 </li>
 <li>
 <p>BibTeX entry:<br>
-    @software{Khoshnevis_SA_2026, <br>
-    author = {Khoshnevis, Arman},<br>
-    license = {Apache-2.0},<br>
-    month = apr,<br>
-    title = {{Sensitivity Analysis of Fractional Constitutive Models}},<br>
-    url = {https://github.com/armankhoshnevis/Sensitivity-Analysis-of-Fractional-Constitutive-Models},<br>
-    version = {1.0.0},<br>
-    year = {2026}<br>
-    }</p>
+  @software{Khoshnevis_SA_2026, <br>
+  author = {Khoshnevis, Arman},<br>
+  license = {Apache-2.0},<br>
+  month = apr,<br>
+  title = {{Sensitivity Analysis of Fractional Constitutive Models}},<br>
+  url = {https://github.com/armankhoshnevis/Sensitivity-Analysis-of-Fractional-Constitutive-Models},<br>
+  version = {1.0.0},<br>
+  year = {2026}<br>
+  }</p>
+</li>
+</ul>
 </li>
 <li>
-<p>Paper citation:<br>
+<p><strong>Paper citation</strong>:<br>
 @article{khoshnevis2025stochastic, <br>
   title={Stochastic Generalized-Order Constitutive Modeling of Viscoelastic Spectra of Polyurea-Graphene Nanocomposites},<br>
   author={Khoshnevis, Arman and Tzelepis, Demetrios A and Ginzburg, Valeriy V and Zayernouri, Mohsen},<br>
