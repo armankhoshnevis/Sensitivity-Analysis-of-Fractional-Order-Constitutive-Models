@@ -15,7 +15,7 @@ import argparse
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--HS', type=int, default=20)
+    parser.add_argument('--HS', type=int, default=20, help='HSWF content percentage (e.g., 20 for 20% HSWF)')
     parser.add_argument('--GnP_idx', type=int, default=0, help='Index of GnP in GnP_list for which to perform sensitivity analysis. GnP_idx = 0, 1, 2, 3 -> 0%, 0.5%, 1%, and 1.5% GnP')
     parser.add_argument('--n_mc', type=int, default=100_000, help='Number of Monte Carlo samples to run for sensitivity analysis')
     parser.add_argument('--batch_size', type=int, default=50_000, help='Batch size for Monte Carlo sampling to manage memory usage')
