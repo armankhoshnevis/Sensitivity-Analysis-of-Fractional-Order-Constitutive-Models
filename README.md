@@ -50,7 +50,7 @@ Once your environment is activated (via Conda or venv), navigate to the `script`
 
 * Global Sensitivity Analysis
 ```bash
-cd script/GSA
+cd scripts/GSA
 python fmg_gsa_main.py --HS 20 --GnP_idx 0
 python fmg_gsa_vis.py --S 'S1' --E 'Ep' --N 2048 --HS 20
 ```
@@ -66,7 +66,7 @@ python fmg_lsa_vis.py --E_type 'Ep' --HS 20
 ### Running on a SLURM Cluster
 If you are running the inference on a cluster that uses the SLURM workload manager, a sample batch script (`gsa.sh` and `lsa.sh`) is provided. The script is pre-configured to activate the SA_Project conda environment.
 ```bash
-cd script/GSA
+cd scripts/GSA
 sbatch gsa.sb
 ```
 
