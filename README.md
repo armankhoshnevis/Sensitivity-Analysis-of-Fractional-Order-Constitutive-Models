@@ -82,7 +82,7 @@ If you use this software, please cite it and its corresponding paper, as:
     * **APA style:** Khoshnevis, A. (2026). Sensitivity Analysis of Fractional Constitutive Models (Version 1.0.0) [Computer software]. https://github.com/armankhoshnevis/Sensitivity-Analysis-of-Fractional-Constitutive-Models
 
     * **BibTeX entry:** <br>
-      @software{Khoshnevis_Sensitivity_Analysis_2026, <br>
+      @software{Khoshnevis_Sensitivity_Analysis_of_2026, <br>
       author = {Khoshnevis, Arman},<br>
       license = {Apache-2.0},<br>
       month = apr,<br>
