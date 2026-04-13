@@ -78,11 +78,11 @@ Please refer to this [link](https://armankhoshnevis.github.io/Sensitivity-Analys
 ## Citation Requirements
 If you use this software, please cite it and its corresponding paper, as:
 
-* **Software citation**:
+* **Software citation:**
     * APA style: Khoshnevis, A. (2026). Sensitivity Analysis of Fractional Constitutive Models (Version 1.0.0) [Computer software]. https://github.com/armankhoshnevis/Sensitivity-Analysis-of-Fractional-Constitutive-Models
 
-    * BibTeX entry:<br>
-      @software{Khoshnevis_SA_2026, <br>
+    * **BibTeX entry:** <br>
+      @software{Khoshnevis_Sensitivity_Analysis_2026, <br>
       author = {Khoshnevis, Arman},<br>
       license = {Apache-2.0},<br>
       month = apr,<br>
@@ -92,7 +92,7 @@ If you use this software, please cite it and its corresponding paper, as:
       year = {2026}<br>
       }
 
-* **Paper citation**:<br>
+* **Paper citation:** <br>
     * @article{khoshnevis2025stochastic, <br>
         title={Stochastic Generalized-Order Constitutive Modeling of Viscoelastic Spectra of Polyurea-Graphene Nanocomposites},<br>
         author={Khoshnevis, Arman and Tzelepis, Demetrios A and Ginzburg, Valeriy V and Zayernouri, Mohsen},<br>
