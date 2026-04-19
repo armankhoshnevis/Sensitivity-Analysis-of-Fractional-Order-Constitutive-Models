@@ -18,11 +18,24 @@
   "dateCreated": "2026-04-02",
   "dateModified": "2026-04-07",
   "description": "A computational framework for conducting local and global sensitivity analyses for fractional-order  constitutive models to identify influential and non-influential parameters, and ultimately reduce the dimensionality of the parameter space",
-  "funder": {
-    "name": "ARO Young Investigator Program (YIP)",
-    "type": "Organization"
-  },
-  "funding": "Award No. W911NF-19-1-0444",
+  "funder": [
+    {
+      "name": "ARO Young Investigator Program (YIP)",
+      "type": "Organization",
+      "awardNumber": "W911NF-19-1-0444"
+    },
+    {
+      "name": "National Science Foundation (NSF)",
+      "type": "Organization",
+      "awardNumber": "DMS-1923201"
+    },
+    {
+      "name": "National Science Foundation (NSF)",
+      "type": "Organization",
+      "awardNumber": "2429466",
+      "description": "The support was provided through the MSU Data Hub and by the MSU Institute for Cyber-Enabled Research (ICER)."
+    }
+  ],
   "issueTracker": "https://github.com/armankhoshnevis/Sensitivity-Analysis-of-Fractional-Order-Constitutive-Models/issues",
   "keywords": [
     "Local Sensitivity Analysis",
