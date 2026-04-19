@@ -1,22 +1,23 @@
-cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+title: Sensitivity-Analysis-of-Fractional-Order-Constitutive-Models
 authors:
-- family-names: "Khoshnevis"
-  given-names: "Arman"
-  affiliation: "Michigan State University"
-  orcid: "https://orcid.org/0009-0008-7806-1491"
-title: "Sensitivity Analysis of Fractional-Order Constitutive Models"
-version: 1.0.0
-date-released: 2026-04-07
-url: "https://github.com/armankhoshnevis/Sensitivity-Analysis-of-Fractional-Constitutive-Models"
-abstract: >-
-  A computational framework for conducting local and global sensitivity analyses for fractional-order 
-  constitutive models to identify influential and non-influential parameters, and ultimately reduce the
-  dimensionality of the parameter space
-license: Apache-2.0
+  - given-names: Arman
+    family-names: Khoshnevis
+    email: khoshne1@msu.edu
+    affiliation: Michigan State University
+cff-version: 1.2.0
+message: If you use this software, please cite it using the metadata from this file.
+type: software
+abstract: A computational framework for conducting local and global sensitivity
+  analyses for fractional-order  constitutive models to identify influential and
+  non-influential parameters, and ultimately reduce the dimensionality of the
+  parameter space
 keywords:
   - Local Sensitivity Analysis
   - Global Sensitivity Analysis
   - Linear Viscoelasticity
   - Fractional Constitutive Models
   - Polyurea Nanocomposites
+license: Apache-2.0
+repository-code: https://github.com/armankhoshnevis/Sensitivity-Analysis-of-Fractional-Order-Constitutive-Models
+date-released: 2026-04-07
+version: 1.0.0
